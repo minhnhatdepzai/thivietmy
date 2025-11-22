@@ -545,3 +545,4 @@ def api_remove_background():
 if __name__ == "__main__":
     # cài: pip install flask opencv-python numpy
     app.run(debug=True)
+ 
