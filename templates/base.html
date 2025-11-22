@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ title if title else "Photo Editor App" }}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<div class="app-wrapper">
+  <header class="app-header">
+    <div class="logo">PHOTO EDITOR APP</div>
+    <div class="header-right">
+      {% if session.get('verified_user') %}
+        <span class="user-pill">👤 {{ session.get('verified_user') }}</span>
+        <a href="{{ url_for('logout') }}" class="btn btn-small">Đăng xuất</a>
+      {% endif %}
+    </div>
+  </header>
+
+  <main class="app-main">
+    {% block content %}{% endblock %}
+  </main>
+</div>
+</body>
+</html>

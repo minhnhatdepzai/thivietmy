@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+{% block content %}
+  <div class="editor-layout">
+    <!-- Cột trái: preview & canvas -->
+    <section class="editor-main">
+      <div class="preview-header">
+        <h2>Trình chỉnh sửa ảnh cơ bản</h2>
+        <span class="tag">ONLINE · AI FACE BLUR</span>
+      </div>
+
+      <div class="canvas-container" id="canvas-container">
+        <div id="placeholder">Chưa có ảnh. Hãy tải ảnh, dán ảnh, hoặc chụp từ webcam.</div>
+        <canvas id="editorCanvas"></canvas>
+      </div>
+
+      <div class="toolbar-row">
+        <button class="btn" id="btn-open-camera">📷 Chụp ảnh</button>
+        <button class="btn" id="btn-close-camera">✖ Tắt camera</button>
+        <button class="btn" id="btn-upload">📂 Tải ảnh lên</button>
+        <input type="file" id="file-input" accept="image/*" hidden />
+        <span class="hint">Tip: Có thể copy ảnh trên mạng rồi <b>Ctrl+V</b> để dán vào.</span>
+      </div>
+
+      <div class="toolbar-row">
+        <button class="btn" id="btn-undo">↶ Quay lại</button>
+        <button class="btn" id="btn-redo">↷ Tiến tới</button>
+        <button class="btn" id="btn-original">Ảnh gốc</button>
+        <button class="btn" id="btn-delete-current">Xóa ảnh hiện tại</button>
+      </div>
+
+      <div class="toolbar-row">
+        <button class="btn" id="btn-grayscale">Đen trắng</button>
+        <button class="btn" id="btn-blur">Làm mờ</button>
+        <button class="btn" id="btn-rotate">Xoay 90°</button>
+        <button class="btn" id="btn-flip">Lật ngang</button>
+        <button class="btn" id="btn-brightness-plus">+ Sáng</button>
+        <button class="btn" id="btn-brightness-minus">- Sáng</button>
+        <button class="btn" id="btn-face-blur">🤖 Làm mờ khuôn mặt (AI)</button>
+      </div>
+
+      <!-- Background -->
+      <div class="toolbar-row">
+        <button class="btn" id="btn-blur-bg">Làm mờ background</button>
+
+        <label class="inline">
+          Màu nền:
+          <input type="color" id="bg-color-picker" value="#1a1c28" />
+        </label>
+        <button class="btn" id="btn-change-bg">Đổi background</button>
+
+        <button class="btn" id="btn-remove-bg">Xóa nền (PNG trong suốt)</button>
+      </div>
+
+      <!-- Tone màu -->
+      <div class="toolbar-row">
+        <button class="btn" id="btn-summer-tone">🎨 Tone mùa hè (nhanh)</button>
+        <span>Hoặc chọn tone:</span>
+        <select id="tone-select">
+          <option value="none">-- Chọn tone --</option>
+          <option value="summer">Mùa hè</option>
+          <option value="forest">Rừng xanh</option>
+          <option value="sunset">Hoàng hôn</option>
+        </select>
+        <button class="btn" id="btn-apply-tone">Áp dụng tone</button>
+      </div>
+
+      <!-- Cắt + Zoom -->
+      <div class="toolbar-row">
+        <button class="btn" id="btn-crop">✂ Cắt ảnh (zoom vào giữa)</button>
+        <button class="btn" id="btn-zoom-in">🔍 Zoom +</button>
+        <button class="btn" id="btn-zoom-out">🔍 Zoom −</button>
+      </div>
+
+      <div class="toolbar-row">
+        <button class="btn" id="btn-pencil">✏ Bút chì</button>
+        <label class="inline">Màu:<input type="color" id="pencil-color" value="#00ffcc" /></label>
+        <label class="inline">Size:<input type="range" id="pencil-size" min="2" max="40" value="8" /></label>
+        <button class="btn" id="btn-pencil-off">Tắt vẽ</button>
+      </div>
+
+      <div class="toolbar-row">
+        <span>Emoji che mặt:</span>
+        <select id="emoji-select">
+          <option value="smile">😀 Smile</option>
+          <option value="heart">❤️ Heart</option>
+          <option value="star">⭐ Star</option>
+          <option value="cool">😎 Cool</option>
+        </select>
+        <button class="btn" id="btn-emoji-face">Che mặt bằng emoji</button>
+      </div>
+
+      <div class="toolbar-row">
+        <button class="btn btn-primary" id="btn-download-png">Tải ảnh (.png)</button>
+        <button class="btn btn-secondary" id="btn-download-jpg">Tải ảnh (.jpg)</button>
+      </div>
+
+      <!-- Webcam preview trong editor -->
+      <video id="camVideo" autoplay playsinline class="hidden"></video>
+
+      <!-- Nút chụp ảnh từ webcam -->
+      <div class="toolbar-row" id="cam-capture-row" style="display:none;">
+        <button class="btn" id="btn-capture-photo">📸 Chụp & đưa vào khu chỉnh sửa</button>
+      </div>
+    </section>
+
+    <!-- Cột phải: Gallery -->
+    <aside class="editor-sidebar">
+      <h3>Ảnh đã lưu trong phiên</h3>
+      <div id="gallery" class="gallery-grid">
+        <!-- thumbnail sẽ add bằng JS -->
+      </div>
+    </aside>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/editor.js') }}"></script>
+{% endblock %}

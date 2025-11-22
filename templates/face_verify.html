@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="face-wrapper">
+  <div class="face-card">
+    <h2>Xác minh người dùng</h2>
+    <p>Xin chào <b>{{ username }}</b>. Hãy xác minh bằng khuôn mặt.</p>
+
+    <div id="verify-status" class="status-label">Trạng thái: Chưa kiểm tra</div>
+
+    <div class="video-area">
+      <video id="video" autoplay playsinline></video>
+      <canvas id="faceCanvas" class="hidden"></canvas>
+    </div>
+
+    <div class="face-buttons">
+      <button class="btn" id="btn-start-camera">Bật camera</button>
+      <button class="btn" id="btn-capture-reference">Chưa có ảnh? → Chụp & lưu</button>
+      <button class="btn btn-primary" id="btn-check-face">Check (Đăng nhập bằng khuôn mặt)</button>
+      <button class="btn btn-secondary" id="btn-stop-camera">Tắt camera / Quay lại</button>
+    </div>
+
+    <div id="face-message" class="alert small"></div>
+
+    <div class="auth-links">
+      <a href="{{ url_for('logout') }}">Đăng xuất</a>
+    </div>
+  </div>
+</div>
+
+<script>
+  const VERIFY_URL_SAVE = "{{ url_for('save_face_reference') }}".replace("%2Fapi%2Fsave-face-reference", "api/save-face-reference");
+</script>
+<script src="{{ url_for('static', filename='js/face_verify.js') }}"></script>
+{% endblock %}

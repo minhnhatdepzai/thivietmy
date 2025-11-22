@@ -1,0 +1,373 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+body {
+  background: radial-gradient(circle at top, #2a2d3a 0, #141622 40%, #080810 100%);
+  color: #f5f5f5;
+  min-height: 100vh;
+}
+
+.app-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 16px 16px 40px;
+}
+
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  margin-bottom: 16px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #202331, #151725);
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.5);
+}
+
+.logo {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #60ffd9;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.user-pill {
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(96, 255, 217, 0.12);
+  border: 1px solid rgba(96, 255, 217, 0.45);
+  font-size: 13px;
+}
+
+.app-main {
+  margin-top: 8px;
+}
+
+/* ---- Buttons ---- */
+
+.btn {
+  border: none;
+  outline: none;
+  padding: 7px 14px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #f5f5f5;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #35ffd1, #15b3ff);
+  color: #05141a;
+  font-weight: 600;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #65ffe0, #37c7ff);
+}
+
+.btn-secondary {
+  background: rgba(102, 153, 255, 0.2);
+}
+
+.btn-small {
+  padding: 4px 10px;
+  font-size: 12px;
+}
+
+/* ---- Forms / Auth ---- */
+
+.auth-card {
+  max-width: 420px;
+  margin: 40px auto;
+  padding: 24px 22px 26px;
+  background: linear-gradient(145deg, #1a1c28, #10121d);
+  border-radius: 20px;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.auth-card h2 {
+  font-size: 22px;
+  margin-bottom: 18px;
+}
+
+.form-group {
+  margin-bottom: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.form-group label {
+  font-size: 13px;
+  color: #b3b7d4;
+}
+
+.form-group input {
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(9, 10, 20, 0.9);
+  color: #f5f5f5;
+  font-size: 14px;
+}
+
+.form-group input:focus {
+  outline: 1px solid #35ffd1;
+  border-color: #35ffd1;
+}
+
+.alert {
+  margin: 10px 0;
+  padding: 8px 10px;
+  border-radius: 10px;
+  font-size: 13px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.alert.small {
+  font-size: 12px;
+}
+
+.auth-links {
+  margin-top: 12px;
+  font-size: 13px;
+  text-align: center;
+  color: #a4a8c6;
+}
+
+.auth-links a {
+  color: #60ffd9;
+  text-decoration: none;
+}
+
+.auth-links a:hover {
+  text-decoration: underline;
+}
+
+.hint {
+  margin-top: 8px;
+  font-size: 12px;
+  color: #a4a8c6;
+  text-align: center;
+}
+
+/* ---- Face verify ---- */
+
+.face-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 24px;
+}
+
+.face-card {
+  width: 100%;
+  max-width: 680px;
+  padding: 20px;
+  border-radius: 18px;
+  background: radial-gradient(circle at top left, #2e3244, #131524);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.face-card h2 {
+  margin-bottom: 6px;
+}
+
+.status-label {
+  margin: 8px 0 14px;
+  font-size: 13px;
+  color: #9fa4c6;
+}
+
+.video-area {
+  position: relative;
+  border-radius: 18px;
+  overflow: hidden;
+  background: #05060c;
+  height: 260px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.video-area video {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.face-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* ---- Editor ---- */
+
+.editor-layout {
+  display: grid;
+  grid-template-columns: 2.3fr 1fr;
+  gap: 14px;
+  margin-top: 14px;
+}
+
+.editor-main {
+  background: radial-gradient(circle at top left, #2a2f40, #111324);
+  border-radius: 18px;
+  padding: 16px;
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.editor-sidebar {
+  background: linear-gradient(145deg, #181a29, #10121e);
+  border-radius: 18px;
+  padding: 14px;
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  overflow-y: auto;
+  max-height: calc(100vh - 130px);
+}
+
+.editor-sidebar h3 {
+  margin-bottom: 10px;
+  font-size: 15px;
+}
+
+.preview-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.preview-header h2 {
+  font-size: 18px;
+}
+
+.tag {
+  font-size: 11px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(96, 255, 217, 0.18);
+  color: #d5fff7;
+}
+
+.canvas-container {
+  position: relative;
+  border-radius: 16px;
+  background: #05060c;
+  height: 380px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+#editorCanvas {
+  max-width: 100%;
+  max-height: 100%;
+  display: none;
+}
+
+#placeholder {
+  color: #7f829d;
+  font-size: 13px;
+  text-align: center;
+  padding: 0 20px;
+}
+
+.toolbar-row {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  font-size: 12px;
+  color: #b7b9d6;
+}
+
+.inline {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.inline input[type="color"],
+.inline input[type="range"] {
+  cursor: pointer;
+}
+
+.hint {
+  font-size: 11px;
+}
+
+/* Webcam video in editor */
+#camVideo {
+  margin-top: 8px;
+  max-width: 100%;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Gallery */
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+  gap: 8px;
+}
+
+.gallery-item {
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #05060c;
+  cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.gallery-item img {
+  display: block;
+  width: 100%;
+  height: 70px;
+  object-fit: cover;
+}
+
+.gallery-item .delete-thumb {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  border: none;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  font-size: 11px;
+  border-radius: 999px;
+  p

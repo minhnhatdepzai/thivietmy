@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="auth-card">
+  <h2>Quên mật khẩu</h2>
+  <form method="POST">
+    <div class="form-group">
+      <label>Tên đăng nhập</label>
+      <input type="text" name="username" required>
+    </div>
+    <button class="btn btn-primary" type="submit">Lấy lại mật khẩu</button>
+  </form>
+  {% if info %}
+    <div class="alert">{{ info }}</div>
+  {% endif %}
+  <div class="auth-links">
+    <a href="{{ url_for('login') }}">← Quay lại đăng nhập</a>
+  </div>
+</div>
+{% endblock %}
