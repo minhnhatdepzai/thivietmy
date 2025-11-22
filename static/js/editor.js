@@ -3,6 +3,10 @@ let originalImage = null;   // dataURL của ảnh gốc
 let currentImage = null;    // dataURL của ảnh hiện tại
 let undoStack = [];
 let redoStack = [];
+let cropMode = false;
+let isDraggingCrop = false;
+let cropStart = null;
+let cropEnd = null;
 
 let drawing = false;
 let pencilMode = false;
@@ -45,6 +49,10 @@ function initEditor() {
   document.getElementById("btn-flip").addEventListener("click", flipHorizontal);
   document.getElementById("btn-brightness-plus").addEventListener("click", () => applyFilter("brightness(1.2)"));
   document.getElementById("btn-brightness-minus").addEventListener("click", () => applyFilter("brightness(0.8)"));
+    // Contrast (khác với brightness)
+  document.getElementById("btn-contrast-plus").addEventListener("click", () => applyFilter("contrast(1.2)"));
+  document.getElementById("btn-contrast-minus").addEventListener("click", () => applyFilter("contrast(0.8)"));
+
   document.getElementById("btn-face-blur").addEventListener("click", blurFaceAI);
 
   // Bút chì
@@ -73,6 +81,7 @@ function initEditor() {
 
   // Crop + Zoom
   document.getElementById("btn-crop").addEventListener("click", cropCenter);
+  document.getElementById("btn-crop-manual").addEventListener("click", enableManualCrop);
   document.getElementById("btn-zoom-in").addEventListener("click", () => zoomImage(1.2));
   document.getElementById("btn-zoom-out").addEventListener("click", () => zoomImage(0.8));
 
@@ -426,6 +435,19 @@ function disablePencil() {
 }
 
 function startDraw(e) {
+  // Nếu đang ở cropMode: dùng chuột để chọn vùng cắt, không vẽ bút chì
+  if (cropMode && currentImage) {
+    const rect = canvas.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    isDraggingCrop = true;
+    cropStart = { x, y };
+    cropEnd = { x, y };
+    drawCropPreview();
+    return;
+  }
+
+  // Bút chì như cũ
   if (!pencilMode || !currentImage) return;
   drawing = true;
   ctx.lineCap = "round";
@@ -437,11 +459,22 @@ function startDraw(e) {
 }
 
 function draw(e) {
+  // Preview vùng crop
+  if (cropMode && isDraggingCrop && currentImage) {
+    const rect = canvas.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    cropEnd = { x, y };
+    drawCropPreview();
+    return;
+  }
+
   if (!drawing) return;
   const rect = canvas.getBoundingClientRect();
   ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
   ctx.stroke();
 }
+
 
 function startDrawTouch(e) {
   if (!pencilMode || !currentImage) return;
@@ -466,10 +499,107 @@ function drawTouch(e) {
 }
 
 function endDraw() {
+  // Kết thúc chọn vùng crop
+  if (cropMode && isDraggingCrop && currentImage) {
+    isDraggingCrop = false;
+    applyCropFromSelection();
+    cropMode = false;      // tắt crop mode sau khi cắt xong
+    return;
+  }
+
   if (!drawing) return;
   drawing = false;
   currentImage = canvas.toDataURL("image/png");
   pushUndoState();
+}
+
+
+// Bật chế độ cắt theo vùng chọn
+function enableManualCrop() {
+  if (!currentImage) {
+    alert("Hãy tải ảnh hoặc chụp ảnh trước khi cắt.");
+    return;
+  }
+  cropMode = true;
+  pencilMode = false; // tắt bút chì nếu đang bật
+  alert("Kéo chuột trên ảnh để chọn vùng cần cắt.");
+}
+
+// Vẽ preview khung cắt (đường nét đứt)
+function drawCropPreview() {
+  if (!currentImage || !cropStart || !cropEnd) return;
+
+  const img = new Image();
+  img.onload = () => {
+    // vẽ lại ảnh gốc
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+    // vẽ khung chữ nhật
+    const x = Math.min(cropStart.x, cropEnd.x);
+    const y = Math.min(cropStart.y, cropEnd.y);
+    const w = Math.abs(cropEnd.x - cropStart.x);
+    const h = Math.abs(cropEnd.y - cropStart.y);
+
+    ctx.save();
+    ctx.strokeStyle = "#00ffcc";
+    ctx.lineWidth = 2;
+    ctx.setLineDash([6, 4]);
+    ctx.strokeRect(x, y, w, h);
+    ctx.restore();
+  };
+  img.src = currentImage;
+}
+
+// Thực hiện cắt ảnh theo vùng đã chọn
+function applyCropFromSelection() {
+  if (!cropStart || !cropEnd || !currentImage) return;
+
+  let x = Math.min(cropStart.x, cropEnd.x);
+  let y = Math.min(cropStart.y, cropEnd.y);
+  let w = Math.abs(cropEnd.x - cropStart.x);
+  let h = Math.abs(cropEnd.y - cropStart.y);
+
+  // vùng quá nhỏ thì bỏ qua
+  if (w < 10 || h < 10) {
+    // vẽ lại ảnh gốc không cắt
+    const img = new Image();
+    img.onload = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+    };
+    img.src = currentImage;
+    cropStart = cropEnd = null;
+    return;
+  }
+
+  const baseImg = new Image();
+  baseImg.onload = () => {
+    // canvas tạm để cắt
+    const tempCanvas = document.createElement("canvas");
+    const tctx = tempCanvas.getContext("2d");
+    tempCanvas.width = w;
+    tempCanvas.height = h;
+
+    // cắt vùng (x, y, w, h) từ ảnh gốc
+    tctx.drawImage(baseImg, x, y, w, h, 0, 0, w, h);
+
+    // resize canvas chính theo vùng cắt
+    canvas.width = w;
+    canvas.height = h;
+    ctx.clearRect(0, 0, w, h);
+    ctx.drawImage(tempCanvas, 0, 0);
+
+    currentImage = canvas.toDataURL("image/png");
+    if (!originalImage) {
+      originalImage = currentImage;
+    }
+    pushUndoState();
+    updatePlaceholder(false);
+
+    cropStart = cropEnd = null;
+  };
+  baseImg.src = currentImage;
 }
 
 /* --------- Ảnh gốc & xóa --------- */
